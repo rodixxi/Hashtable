@@ -61,6 +61,19 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
     }
     
     @Override
+    public String toString(){
+    String str = "";
+    for (int i = 0; i < this.table.length; i++){
+        if (this.table[i] != null){
+        str += "[";
+        str += this.table[i].toString();
+        str += "]";
+    }
+    }
+    return str;
+    }
+    
+    @Override
     protected Object clone() throws CloneNotSupportedException 
     {
         TSB_OAHashtable t = new TSB_OAHashtable(table.length);
@@ -110,19 +123,170 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
     
     @Override
     public V get(Object key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        V v;
+        int i = h((K)key, this.table.length);
+        if (this.table[i].key.equals(key)) return this.table[i].value;
+        double power = 1;
+        double j = 1;
+         
+        while ((this.table[i + (int)power].key != null || this.table[i + (int)power].key != null)){
+            if (key.equals(this.table[i + (int)power])){
+                return this.table[i + (int)power].value;
+            }
+            j++; 
+            power = Math.pow(j, 2);
+            count ++;
+            if (count == this.table.length) break;
+            if (i >= this.table.length) i -= this.table.length;      
+        }       
+        throw new NullPointerException("get(): clave no existe");
+        
     }
 
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int k = h(key, this.table.length);
+        double power = 1, j = 1;
+        if (this.table[k] == null){
+            this.table[k] = new Entry(key, value);
+            this.count++;
+            this.modCount++;
+            if (this.count >= this.table.length / 2) rehash();
+            return value;
+        }
+        while (this.table[k + (int)power].key != null){
+            j++; 
+            power = Math.pow(j, 2);
+            
+        }
+        this.table[k + (int)power].key = key;
+        this.table[k + (int)power].value = value;
+        return value;
     }
 
     @Override
     public V remove(Object key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(key == null) throw new NullPointerException("remove(): parámetro null");
+       
+        int i = this.h(key.hashCode()), count = 0;
+        V old = null;
+        double power = 1;
+        double j = 1;
+        boolean found = false;
+        
+        while ((this.table[i + (int)power].key != null || this.table[i + (int)power].key != null) && !found){
+            if (key.equals(this.table[i + (int)power])){
+                found = true;
+                break;
+            }
+            j++; 
+            power = Math.pow(j, 2);
+            count ++;
+            if (count == this.table.length) break;
+            if (i >= this.table.length) i -= this.table.length;      
+        }       
+        if (found){
+            old = this.table[i + (int)power].value;
+            this.table[i + (int)power].key = null;
+            this.count--;
+            this.modCount++;
+            return old;
+        }
+        return null;
     }
+    
+    public Map.Entry<K, V> remove(int k){
+    Map.Entry<K, V> v = this.table[k];
+    this.table[k].key = null;
+    return v;
+    }
+    
+    private static final int siguientePrimo ( int n )
+    {
+        n *= 2;
+        n++;
+        for ( ; !esPrimo(n); n+=2 ) ;
+        return n;
+    }
+    
+    private static boolean esPrimo(int num) {
+        if (num % 2 == 0) return false;
+        for (int i = 3; i * i < num; i += 2)
+            if (num % i == 0) return false;
+        return true;
+    }
+    
+    protected void rehash()
+    {
+        int old_length = this.table.length;
+        
+        // nuevo tamaño: doble del anterior pero primo
+        int new_length = siguientePrimo(old_length);
+        
+        // no permitir que la tabla tenga un tamaño mayor al límite máximo...
+        // ... para evitar overflow y/o desborde de índices...
+        if(new_length > TSB_OAHashtable.MAX_SIZE) 
+        { 
+            new_length = TSB_OAHashtable.MAX_SIZE;
+        }
 
+        
+        Entry<K, V> temp[] = new Entry[new_length];
+                
+        // notificación fail-fast iterator... la tabla cambió su estructura...
+        this.modCount++;  
+       
+        // recorrer el viejo arreglo y redistribuir los objetos que tenia...
+        for(int i = 0; i < this.table.length; i++)
+        {
+            Entry<K, V> x = this.table[i];
+            K key = x.getKey();
+            int y = this.h(key, temp.length);
+            temp[y] = x;
+           }
+        
+       
+        // cambiar la referencia table para que apunte a temp...
+        this.table = temp;
+    }
+    /* Función hash. Toma una clave entera k y calcula y retorna un índice 
+     * válido para esa clave para entrar en la tabla.     
+     */
+    private int h(int k)
+    {
+        return h(k, this.table.length);
+    }
+    
+    /*
+     * Función hash. Toma un objeto key que representa una clave y calcula y 
+     * retorna un índice válido para esa clave para entrar en la tabla.     
+     */
+    private int h(K key)
+    {
+        return h(key.hashCode(), this.table.length);
+    }
+    
+    /*
+     * Función hash. Toma un objeto key que representa una clave y un tamaño de 
+     * tabla t, y calcula y retorna un índice válido para esa clave dedo ese
+     * tamaño.     
+     */
+    private int h(K key, int t)
+    {
+        return h(key.hashCode(), t);
+    }
+    
+    /*
+     * Función hash. Toma una clave entera k y un tamaño de tabla t, y calcula y 
+     * retorna un índice válido para esa clave dado ese tamaño.     
+     */
+    private int h(int k, int t)
+    {
+        if(k < 0) k *= -1;
+        return k % t;        
+    }    
+         
+    
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -253,7 +417,7 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
                 }
                 
                 // eliminar el objeto que retornó next() la última vez...
-                Map.Entry<K, V> garbage = TSB_OAHashtable.this.table.remove(current_entry);
+                Map.Entry<K, V> garbage = TSB_OAHashtable.this.remove(current_entry);
 
                 // quedar apuntando al anterior al que se retornó...                
                 

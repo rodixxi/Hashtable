@@ -10,7 +10,7 @@ public class Principal
     public static void main(String args[])
     {
         // una tabla "corta" con factor de carga pequeño...
-        TSBHashtable<Integer, String> ht1 = new TSBHashtable<>(3, 0.2f);
+        TSB_OAHashtable<Integer, String> ht1 = new TSB_OAHashtable<>(1000);
         System.out.println("Contenido inicial: " + ht1);
         
         // algunas inserciones...
@@ -27,8 +27,8 @@ public class Principal
         ht1.put(11, "Venezuela");
         ht1.put(12, "Estados Unidos");
         System.out.println("Luego de algunas inserciones: " + ht1);
-        
-        TSBHashtable<Integer, String> ht2 = new TSBHashtable<>(ht1);
+        /*
+        TSB_OAHashtable<Integer, String> ht2 = new TSB_OAHashtable<>(ht1);
         System.out.println("Segunda tabla: " + ht2);
         
         System.out.println("Tabla 1 recorrida a partir de una vista: ");
@@ -39,5 +39,7 @@ public class Principal
             Map.Entry<Integer, String> entry = it.next();
             System.out.println("Par: " + entry);
         }
+        
+*/
     }
 }
