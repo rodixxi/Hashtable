@@ -6,15 +6,13 @@ import java.util.Set;
 import textManager.*;
 import java.io.File;
 
+public class Principal {
 
-public class Principal 
-{
-    public static void main(String args[])
-    {
+    public static void main(String args[]) {
         // una tabla "corta" con factor de carga pequeño...
-        TSB_OAHashtable<Integer, String> ht1 = new TSB_OAHashtable<>(1000);
+        TSB_OAHashtable<Integer, String> ht1 = new TSB_OAHashtable<>(101);
         System.out.println("Contenido inicial: " + ht1);
-        
+
         // algunas inserciones...
         ht1.put(1, "Argentina");
         ht1.put(2, "Brasil");
@@ -31,7 +29,7 @@ public class Principal
         System.out.println("Luego de algunas inserciones: " + ht1);
         String ss = ht1.get(5);
         System.out.println("item 5: " + ss);
-        
+
         File file = new File("16082-8.txt");
         TextFile libro = new TextFile(file);
         libro.processFile();
@@ -49,6 +47,6 @@ public class Principal
             System.out.println("Par: " + entry);
         }
         
-*/
+         */
     }
 }

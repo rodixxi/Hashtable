@@ -125,11 +125,17 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
     public V get(Object key) {
         V v;
         int i = h((K)key, this.table.length);
-        if (this.table[i].key.equals(key)) return this.table[i].value;
+        try{
+        if (this.table[i].key.equals(key)) return this.table[i].value;}
+        catch(NullPointerException e){System.out.println("Key does not exists");}
         double power = 1;
         double j = 1;
-         
-        while ((this.table[i + (int)power].key != null || this.table[i + (int)power].key != null)){
+        boolean flag = true;
+        try{
+        if ((this.table[i + (int)power].key != null || this.table[i + (int)power].key != null)) flag = true;
+        }
+        catch(NullPointerException e){flag = false;}
+        while (flag){
             if (key.equals(this.table[i + (int)power])){
                 return this.table[i + (int)power].value;
             }
@@ -137,9 +143,15 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
             power = Math.pow(j, 2);
             count ++;
             if (count == this.table.length) break;
-            if (i >= this.table.length) i -= this.table.length;      
-        }       
-        throw new NullPointerException("get(): clave no existe");
+            if (i >= this.table.length) i -= this.table.length;  
+            try{
+        if ((this.table[i + (int)power].key != null || this.table[i + (int)power].key != null)) flag = true;
+        }
+        catch(NullPointerException e){flag = false;}
+        }
+        v = null;
+        return v;
+        //throw new NullPointerException("get(): clave no existe");
         
     }
 
@@ -147,6 +159,8 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
     public V put(K key, V value) {
         int k = h(key, this.table.length);
         double power = 1, j = 1;
+        boolean flag = true;
+        
         if (this.table[k] == null){
             this.table[k] = new Entry(key, value);
             this.count++;
@@ -154,9 +168,17 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
             if (this.count >= this.table.length / 2) rehash();
             return value;
         }
-        while (this.table[k + (int)power].key != null){
+        try{
+            if (this.table[k + (int)power].key != null) flag = false;
+        }
+        catch(NullPointerException e) {flag = false;}
+        while (flag){
             j++; 
             power = Math.pow(j, 2);
+            try{
+            if (this.table[k + (int)power].key != null) flag = false;
+        }
+        catch(NullPointerException e) {flag = false;}
             
         }
         this.table[k + (int)power].key = key;
