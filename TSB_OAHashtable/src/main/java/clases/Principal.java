@@ -3,6 +3,8 @@ package clases;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import textManager.*;
+import java.io.File;
 
 
 public class Principal 
@@ -27,6 +29,13 @@ public class Principal
         ht1.put(11, "Venezuela");
         ht1.put(12, "Estados Unidos");
         System.out.println("Luego de algunas inserciones: " + ht1);
+        String ss = ht1.get(5);
+        System.out.println("item 5: " + ss);
+        
+        File file = new File("16082-8.txt");
+        TextFile libro = new TextFile(file);
+        libro.processFile();
+        System.out.println(libro.toString());
         /*
         TSB_OAHashtable<Integer, String> ht2 = new TSB_OAHashtable<>(ht1);
         System.out.println("Segunda tabla: " + ht2);

@@ -72,6 +72,8 @@ public class TextFile {
 
     @Override
     public String toString() {
-        return "TextFile{" + "file=" + file + '}';
+        String str = "TextFile{" + "file=" + file + ": }";
+        str += this.words.toString();
+        return str;
     }
 }
