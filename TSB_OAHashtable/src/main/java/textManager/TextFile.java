@@ -47,7 +47,7 @@ public class TextFile {
                         }
                         Word wordObject = new Word(word);
                         if (!words.isEmpty()) {
-                            Word x = words.get(wordObject.hashCode());
+                            Word x = this.words.get(wordObject.hashCode());
                             if (x != null) {
                                 x.addCount();
                                 continue;
