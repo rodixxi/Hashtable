@@ -14,6 +14,7 @@ public class Principal {
         System.out.println("Contenido inicial: " + ht1);
 
         // algunas inserciones...
+        /*
         ht1.put(1, "Argentina");
         ht1.put(2, "Brasil");
         ht1.put(3, "Chile");
@@ -29,11 +30,23 @@ public class Principal {
         System.out.println("Luego de algunas inserciones: " + ht1);
         String ss = ht1.get(5);
         System.out.println("item 5: " + ss);
-
+        */
         File file = new File("16082-8.txt");
         TextFile libro = new TextFile(file);
         libro.processFile();
+        System.out.println(libro.toString());/*
+        file = new File("18166-8.txt");
+        libro.addNewFile(file);
+        libro.processFile();
         System.out.println(libro.toString());
+        file = new File("22975-8.txt");
+        libro.addNewFile(file);
+        libro.processFile();
+        System.out.println(libro.toString());
+        file = new File("41575-8.txt");
+        libro.addNewFile(file);
+        libro.processFile();
+        System.out.println(libro.toString());*/
         /*
         TSB_OAHashtable<Integer, String> ht2 = new TSB_OAHashtable<>(ht1);
         System.out.println("Segunda tabla: " + ht2);

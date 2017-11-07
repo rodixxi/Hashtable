@@ -15,6 +15,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
+
+
 /**
  *
  * @author jpaganel
@@ -164,7 +166,9 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
             this.table[k] = new Entry(key, value);
             this.count++;
             this.modCount++;
-            if (this.count >= this.table.length / 2) rehash();
+            if (this.count >= this.table.length / 2) {
+                rehash();
+            }
             return value;
         }
         
